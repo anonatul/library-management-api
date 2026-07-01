@@ -3,14 +3,17 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 
 dotenv.config();
-// connectDB();
+connectDB();
 
 const app = express();
 
 app.use(express.json());
 
 app.get("/", (req, res) => {
-    res.send("Library Management API is running...");
+    res.status(200).json({
+        success: true,
+        message: "Library Management API is running.."
+    })
 });
 
 const PORT = process.env.PORT || 5000;
