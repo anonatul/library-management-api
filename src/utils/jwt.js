@@ -10,3 +10,21 @@ export  const generateToken = (userId) => {
 
     return token;
 };
+
+export const verifyToken = (token) => {
+    if (!process.env.JWT_SECRET) {
+        throw new Error('Error verifying token: Missing environment variable JWT_SECRET');
+    };
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        
+        if (!decoded || !decoded.id) {
+            throw new Error('Error verifying token: Invalid token');
+        };
+        
+        return decoded;
+    } catch (error) {
+        throw new Error('Error verifying token: Invalid token');
+    };
+};
