@@ -73,9 +73,7 @@ export const loginUser = async (req, res) => {
 
     try {
         // checking if user exists
-        const user = await User.findOne({
-            email: email.toLowerCase()
-        });
+        const user = await User.findOne({ email: email.toLowerCase() }).select("+password");
 
         if (!user) {
             return res.status(401).json({
@@ -118,5 +116,5 @@ export const loginUser = async (req, res) => {
             success: false,
             message: "Server error"
         });
-    }
+    };
 };
