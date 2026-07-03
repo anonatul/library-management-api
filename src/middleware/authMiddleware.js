@@ -1,7 +1,7 @@
 import { verifyToken } from '../utils/jwt.js';
 import User from '../models/User.js';
 
-export const autheticateToken = async (req, res, next) => {
+export const authenticateToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
 
     if (!authHeader) {
