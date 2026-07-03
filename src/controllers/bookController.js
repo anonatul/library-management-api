@@ -4,10 +4,17 @@ export const createBook = async (req, res) => {
     const { title, author, category, isbn, description, publishedYear, totalCopies, availableCopies, coverImage } = req.body;
 
     // checking for all required fields
-    if (!title || !author || !category || !isbn || !totalCopies || !availableCopies) {
+    if (!title || !author || !category || !isbn) {
         return res.status(400).json({
             success: false,
             message: "All required fields are missing"
+        });
+    };
+
+    if (totalCopies < 0 || availableCopies < 0) {
+        return res.status(400).json({
+            success: false,
+            message: "Copies fields are required"
         });
     };
 
@@ -123,7 +130,6 @@ export const updateBook = async (req, res) => {
     const { title, author, category, isbn, description, publishedYear, totalCopies, availableCopies, coverImage } = req.body;
 
     try {
-
         const book = await Book.findByIdAndUpdate(id, {
             title,
             author,
