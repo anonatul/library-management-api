@@ -189,3 +189,40 @@ export const deleteBook = async (req, res) => {
         });
     };
 };
+
+export const uploadBookCover = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const book = await Book.findById(id);
+
+        if (!book) {
+            return res.status(404).json({
+                success: false,
+                message: "Book not found"
+            });
+        }
+
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: "No image file provided"
+            });
+        }
+
+        book.coverImage = req.file.path;
+        await book.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Book cover uploaded successfully",
+            data: book
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+};
