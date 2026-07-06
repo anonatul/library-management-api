@@ -1,4 +1,5 @@
 import Book from "../models/Book.js";
+import Author from "../models/Author.js";
 
 export const createBook = async (req, res) => {
     const { title, author, category, isbn, description, publishedYear, totalCopies, availableCopies, coverImage } = req.body;
