@@ -4,6 +4,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import bookRoutes from "./routes/bookRoutes.js";
 import authorRoutes from "./routes/authorRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 // connectDB();
@@ -27,6 +28,9 @@ app.use("/api/books", bookRoutes);
 
 // --- Author Routes ---
 app.use("/api/authors", authorRoutes);
+
+// --- User Routes ---
+app.use("/api/users", userRoutes);
 
 const PORT = process.env.PORT || 5000;
 
