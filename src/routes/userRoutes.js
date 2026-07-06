@@ -1,6 +1,6 @@
 import express from "express";
 import { authenticateToken } from "../middleware/authMiddleware.js";
-import { getUsers, getUserById, uploadProfilePicture, updateUser } from "../controllers/userController.js";
+import { getUsers, getUserById, uploadProfilePicture, updateUser, deleteUser } from "../controllers/userController.js";
 import { upload } from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
@@ -19,5 +19,6 @@ router.patch(
 );
 router.get("/:id", authenticateToken, getUserById);
 router.put("/:id", authenticateToken, updateUser);
+router.delete("/:id", authenticateToken, deleteUser);
 
 export default router;
