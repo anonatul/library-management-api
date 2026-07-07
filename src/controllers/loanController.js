@@ -70,3 +70,22 @@ export const getLoans = async (req, res) => {
     }
 };
 
+export const getLoanById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const loan = await Loan.findById(id)
+            .populate("user", "name email")
+            .populate("book", "title");
+
+        if (!loan) {
+            return res.status(404).json({ success: false, message: "Loan not found" });
+        }
+
+        res.status(200).json({ success: true, message: "Loan fetched successfully", data: loan });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
