@@ -58,3 +58,32 @@ export const createReview = async (req, res) => {
         res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
+
+export const updateReview = async (req, res) => {
+    const { reviewId } = req.params;
+    const { rating, review } = req.body;
+
+    try {
+        const existingReview = await Review.findById(reviewId);
+
+        if (!existingReview) {
+            return res.status(404).json({ success: false, message: "Review not found" });
+        }
+
+        if (existingReview.user.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ success: false, message: "Not authorized to update this review" });
+        }
+
+        if (rating !== undefined) existingReview.rating = rating;
+        if (review !== undefined) existingReview.review = review;
+
+        await existingReview.save();
+
+        const populatedReview = await Review.findById(existingReview._id).populate("user", "name email");
+
+        res.status(200).json({ success: true, message: "Review updated successfully", data: populatedReview });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
