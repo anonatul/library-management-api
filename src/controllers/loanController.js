@@ -115,3 +115,29 @@ export const updateLoan = async (req, res) => {
     }
 };
 
+export const deleteLoan = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const loan = await Loan.findById(id);
+        if (!loan) {
+            return res.status(404).json({ success: false, message: "Loan not found" });
+        }
+
+        // Return the book when loan is deleted/returned
+        const book = await Book.findById(loan.book);
+        if (book) {
+            book.availableCopies += 1;
+            await book.save();
+        }
+
+        loan.status = "returned";
+        loan.returnedDate = new Date();
+        await loan.save();
+
+        res.status(200).json({ success: true, message: "Loan marked as returned successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
