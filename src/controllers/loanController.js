@@ -41,3 +41,32 @@ export const createLoan = async (req, res) => {
         res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
+
+export const getLoans = async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const filter = {};
+    if (req.query.status) filter.status = req.query.status;
+    if (req.query.user) filter.user = req.query.user;
+    if (req.query.book) filter.book = req.query.book;
+
+    try {
+        const loans = await Loan.find(filter).skip(skip).limit(limit)
+            .populate("user", "name email")
+            .populate("book", "title");
+        const total = await Loan.countDocuments(filter);
+
+        res.status(200).json({
+            success: true,
+            message: "Loans fetched successfully",
+            data: loans,
+            pagination: { page, limit, total, totalPages: Math.ceil(total / limit) }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
