@@ -89,3 +89,29 @@ export const getLoanById = async (req, res) => {
     }
 };
 
+export const updateLoan = async (req, res) => {
+    const { id } = req.params;
+    const { dueDate, status } = req.body;
+
+    try {
+        const loan = await Loan.findById(id);
+        if (!loan) {
+            return res.status(404).json({ success: false, message: "Loan not found" });
+        }
+
+        if (dueDate) loan.dueDate = dueDate;
+        if (status) loan.status = status;
+
+        await loan.save();
+
+        const populatedLoan = await Loan.findById(loan._id)
+            .populate("user", "name email")
+            .populate("book", "title");
+
+        res.status(200).json({ success: true, message: "Loan updated successfully", data: populatedLoan });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
